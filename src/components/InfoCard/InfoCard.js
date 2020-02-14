@@ -53,8 +53,8 @@ class InfoCard extends Component {
 		    <div key={item.id}>
 				<p><b>MSRP</b>: {item.MSRP } </p>
 				<p><b>Vehicle name</b>: {item.vehicleName} </p>		
-				<p><b>Monthly loan payment</b>: </p>
-				<p><b>Monthly lease payment</b>: </p>
+				<p><b>Monthly loan payment</b>: {this.props.monthlyPaymentLoan} </p>
+				<p><b>Monthly lease payment</b>: {this.props.monthlyPaymentLease}</p>
 				<p><b>Taxes</b>: {this.taxes}</p> 
 				<p><b>Dealer name</b>: {item.dealerName} </p>	
 				<p><b>Dealer phone number</b>: {item.dealerPhone} </p>	

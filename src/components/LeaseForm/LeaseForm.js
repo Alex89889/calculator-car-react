@@ -4,7 +4,7 @@ import validationSchema from "./validationSchema";
 import classNames from "classnames";
 
 class CalculatorForm extends React.Component {
-	_isMounted = false;
+
 	
   constructor(props) {
     super(props);
@@ -18,29 +18,6 @@ class CalculatorForm extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  
-  componentDidMount() {
-	this._isMounted = true;  
-	  
-	fetch("https://ipinfo.io/json?token=d4df50232abc3b")
-      .then(res => res.json())
-      .then(
-        (result) => {
-			if (this._isMounted) {
-				this.setState({postCodeLease: result.postal});
-			}
-        },
-        (error) => {
-          this.setState({
-            error
-          });
-        }
-      );  
-  }
-  
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   handleChange(event) {
@@ -127,7 +104,7 @@ class CalculatorForm extends React.Component {
         <div className="formField">
           <input
             type="text"
-            value={this.state.postCodeLease}
+            value={this.props.postCode}
             onChange={this.handleInputChange}
             id="postCodeLease"
             name="postCodeLease"

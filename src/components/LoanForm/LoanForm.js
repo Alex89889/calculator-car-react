@@ -4,7 +4,6 @@ import validationSchema from "./validationSchema";
 import classNames from "classnames";
 
 class CalculatorForm extends React.Component {
-	_isMounted = false;
 	
   constructor(props) {
     super(props);
@@ -19,28 +18,7 @@ class CalculatorForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   
-  componentDidMount() {
-	  this._isMounted = true;
-	  
-	fetch("https://ipinfo.io/json?token=d4df50232abc3b")
-      .then(res => res.json())
-      .then(
-        (result) => {
-			if (this._isMounted) {
-				this.setState({postCode: result.postal});
-			}
-        },
-        (error) => {
-          this.setState({
-            error
-          });
-        }
-      );  
-  }
   
-   componentWillUnmount() {
-    this._isMounted = false;
-  }
 
   handleChange(event) {
   //  this.setState({value: event.target.value});
@@ -74,7 +52,7 @@ class CalculatorForm extends React.Component {
         <div className="formField">
           <input
             type="text"
-            value={this.state.downPayment}
+            defaultValue={this.state.downPayment}
             onChange={this.handleInputChange}
             id="downPayment"
             name="downPayment"
@@ -88,7 +66,7 @@ class CalculatorForm extends React.Component {
         <div className="formField">
           <input
             type="text"
-            value={this.state.tradeIn}
+            defaultValue={this.state.tradeIn}
             onChange={this.handleInputChange}
             id="tradeIn"
             name="tradeIn"
@@ -114,7 +92,7 @@ class CalculatorForm extends React.Component {
         <div className="formField">
           <input
             type="text"
-            value={this.state.APR}
+            defaultValue={this.state.APR}
             onChange={this.handleInputChange}
             id="APR"
             name="APR"
@@ -127,7 +105,7 @@ class CalculatorForm extends React.Component {
         <div className="formField">
           <input
             type="text"
-            value={this.state.postCode}
+            defaultValue={this.props.postCode}
             onChange={this.handleInputChange}
             id="postCode"
             name="postCode"
