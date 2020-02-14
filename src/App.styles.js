@@ -31,9 +31,6 @@ export default css`
       }
     }
   }
-  @media (max-width: 1041px) {
-    padding: 0;
-  }
 
   header h1 {
     text-transform: uppercase;
@@ -138,7 +135,7 @@ export default css`
       position: relative;
       flex-wrap: wrap;
       display: flex;
-      width: 70%;
+      width: 100%;
       input {
         width: 80%;
       }
@@ -227,7 +224,7 @@ export default css`
       position: relative;
       flex-wrap: wrap;
       display: flex;
-      width: 70%;
+      width: 100%;
       input {
         width: 80%;
       }

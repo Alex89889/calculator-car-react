@@ -13,7 +13,7 @@ class InfoCard extends Component {
   async componentDidMount() {
 	this._isMounted = true;
 	  
-    await fetch("./data/infoCard-mock.js")
+    await fetch("https://alex89889.github.io/calculator/data/infoCard-mock.js")
       .then(res => res.json())
       .then(
         (result) => {

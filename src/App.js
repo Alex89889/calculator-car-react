@@ -201,7 +201,7 @@ class App extends React.Component {
 		<label htmlFor="tab2" title="Lease">Lease</label>
       
         <section className="calculatorWrapper" id="content-tab1">
-           <form onSubmit={this.handleSubmit} css={styles}>
+     <form >
       <div>
         <label htmlFor="termMonth">Term (Month):</label>
         <div className="formField">
@@ -284,7 +284,7 @@ class App extends React.Component {
         </section>
 		
 		<section className="calculatorWrapper" id="content-tab2">
-           <form onSubmit={this.handleSubmit} css={styles}>
+           <form>
       <div>
         <label htmlFor="termMonth">Term (Month):</label>
         <div className="formField">
