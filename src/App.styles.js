@@ -3,7 +3,7 @@ import { COLORS } from "./constants";
 
 export default css`
   font-size: 2rem;
-  padding: 0 20rem;
+  padding: 0 5rem;
   .container{
 	display: flex;
     justify-content: space-between; 

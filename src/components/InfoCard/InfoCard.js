@@ -39,8 +39,9 @@ class InfoCard extends Component {
   
   render() {
 	 const { error, isLoaded, items } = this.state;
-	 if(this.props.postCode){
-		this.taxes = this.props.postCode.split('').map(num => num * 11)
+	 const { postCode, monthlyPaymentLoan, monthlyPaymentLease } = this.props;
+	 if(postCode){
+		this.taxes = postCode.split('').map(num => num * 11)
 	 }
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -53,8 +54,8 @@ class InfoCard extends Component {
 		    <div key={item.id}>
 				<p><b>MSRP</b>: {item.MSRP } </p>
 				<p><b>Vehicle name</b>: {item.vehicleName} </p>		
-				<p><b>Monthly loan payment</b>: {this.props.monthlyPaymentLoan} </p>
-				<p><b>Monthly lease payment</b>: {this.props.monthlyPaymentLease}</p>
+				<p><b>Monthly loan payment</b>: {monthlyPaymentLoan} </p>
+				<p><b>Monthly lease payment</b>: {monthlyPaymentLease}</p>
 				<p><b>Taxes</b>: {this.taxes}</p> 
 				<p><b>Dealer name</b>: {item.dealerName} </p>	
 				<p><b>Dealer phone number</b>: {item.dealerPhone} </p>	

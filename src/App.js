@@ -3,8 +3,6 @@ import "regenerator-runtime/runtime";
 import { hot } from "react-hot-loader/root";
 import { Global } from "@emotion/core";
 import styles, { globalStyles } from "./App.styles";
-//import LoanForm from "./components/LoanForm";
-//import LeaseForm from "./components/LeaseForm";
 import InfoCard from "./components/InfoCard";
 
 import { calculateLoan, calculateAmortization } from "./utils/loanCalculator";
@@ -34,22 +32,7 @@ class App extends React.Component {
 		isDefaultScore: true
 	};
 
-    this.handleInputChangePayment = this.handleInputChangePayment.bind(this);
-    this.handleInputChangeTermMonth = this.handleInputChangeTermMonth.bind(this);
-	this.handleInputChangeTrade = this.handleInputChangeTrade.bind(this);
-	this.handleInputChangeCredit = this.handleInputChangeCredit.bind(this);
-	this.handleInputChangeMiles = this.handleInputChangeMiles.bind(this);
-	this.handleInputChangeCode = this.handleInputChangeCode.bind(this);
-	
-	this.handleInputChangeLoanPay = this.handleInputChangeLoanPay.bind(this);
-	this.handleInputChangeTerm = this.handleInputChangeTerm.bind(this);
-	this.handleInputChangeTradeLoan = this.handleInputChangeTradeLoan.bind(this);
-	this.handleInputChangeCreditLoan = this.handleInputChangeCreditLoan.bind(this);
-	this.handleInputChangeAPR = this.handleInputChangeAPR.bind(this);
-	this.handleInputChangePostCode = this.handleInputChangePostCode.bind(this);
   }
-  
-  
   
   componentDidMount() {
 	this._isMounted = true;  
@@ -76,69 +59,34 @@ class App extends React.Component {
     this._isMounted = false;
   }
   
-  handleInputChangePostCode(event) {
-	this.setState({postCodeLoan: event.target.value});
-	this.changePaymentLoan();    
-  }
-  
-  handleInputChangeAPR(event) {
-	this.setState({APR: event.target.value});
-	this.changePaymentLoan();    
-  }
-  
-  handleInputChangeCreditLoan(event) {
-	this.setState({isDefaultScore: false});  
-	this.setState({creditScoreLoan: event.target.value});
-	this.changePaymentLoan();    
-  }
-  
-  handleInputChangeTradeLoan(event) {
-	this.setState({tradeIn: event.target.value});
-	this.changePaymentLoan();    
-  }
-  
-  handleInputChangeLoanPay(event) {
-	this.setState({downPayment: event.target.value});
-	this.changePaymentLoan();  
-  }
-
-  handleInputChangeTerm(event) {
+  handleInputChange = (event) => {
+	this.setState({isDefaultScore: false}); 
 	this.setState({isDefaultMonth: false});
-	this.setState({termMonthLoan: event.target.value});
-	this.changePaymentLoan();  
+	const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+
+	this.changePaymentLoan();    
+  }
+  
+  handleInputChangeLease = (event) => {
+	
+	const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+
+	this.changePaymentLease();    
   }
  
  
-  handleInputChangeTermMonth(event) {
-	  this.setState({termMonth: event.target.value});
-	  this.changePaymentLease();
-	  
-  }
-  
-  handleInputChangePayment(event) {
-	  this.setState({downPaymentLease: event.target.value});
-	  this.changePaymentLease();  
-  }
-  
-  handleInputChangeTrade(event) {
-	 this.setState({tradeInLease: event.target.value});
-	 this.changePaymentLease();  
-  }
-  
-  handleInputChangeCredit(event) {
-	this.setState({creditScore: event.target.value});
-	this.changePaymentLease();    
-  }
-  
-  handleInputChangeMiles(event) {
-	this.setState({annualMiles: event.target.value});
-	this.changePaymentLease();     
-  }
-  
-  handleInputChangeCode(event) {
-	this.setState({postCodeLease: event.target.value});
-	this.changePaymentLease();    
-  }
   
   changePaymentLease(){
 	  let creditScoreValue;
@@ -160,12 +108,7 @@ class App extends React.Component {
   
   changePaymentLoan(){
 	  let creditScoreValue;
-	  let APR;
-	  
-	  if(this.state.APR){
-		APR = this.state.APR;  
-	  }
-	  else{ APR = 1;}
+	  let APR = this.state.APR || 1;
 	  
 	  if(this.state.creditScoreLoan >= 750){
 		creditScoreValue = 0.95;
@@ -180,13 +123,39 @@ class App extends React.Component {
 		creditScoreValue = 1.20;    
 	  }
 	  let newMonPayment = Math.round((42815 - this.state.tradeIn - this.state.downPayment) / this.state.termMonthLoan * creditScoreValue * APR);
-	  console.log(newMonPayment);
 	  this.setState({monthlyPaymentLoan: newMonPayment});  
   }
-
+  
+	
   render() {
-	  
-    return (
+	const termMonthValue = [12, 24, 36, 48, 60, 72];
+	const buttonMonthLoan = termMonthValue.map((number) =>
+		(number === 24) ?
+		<button key={number.toString()} type="button" className={this.state.isDefaultMonth? "term-month--button active" : "term-month--button"} value={number} onClick={this.handleInputChange} name="termMonthLoan">{number}</button>
+		: <button key={number.toString()} type="button" className="term-month--button" value={number} onClick={this.handleInputChange} name="termMonthLoan">{number}</button>);  
+    
+	const creditScoreValue = [600, 650, 700, 750, 800, 850, 900];
+	const buttonCreditScore = termMonthValue.map((number) =>
+		(number === 750) ?
+		<button key={number.toString()} type="button" value={number} onChange={this.handleInputChange} name="creditScoreLoan" className={this.state.isDefaultScore? "credit-score--button active" : "term-month--button"}>{number}</button>
+		: <button key={number.toString()} type="button" className="credit-score--button" value={number} onClick={this.handleInputChange} name="creditScoreLoan">{number}</button>	);
+	
+	const termMonthValueLease = [24, 36, 48];
+	const selectTermMonth = termMonthValueLease.map((number) =>
+		<option key={number.toString()} value={number}>{number}</option>
+	);
+	
+	const selectCreditScore = creditScoreValue.map((number) =>
+		<option key={number.toString()} value={number}>{number}</option>
+	);
+	
+	const annualMilesValue = [10000, 12000, 15000];
+	const selectAnnualMiles = annualMilesValue.map((number) =>
+		<option key={number.toString()} value={number}>{number}</option>
+	);
+	
+	
+	return (
 	<div css={styles}>
       <Global styles={globalStyles} />
       <header>
@@ -205,14 +174,8 @@ class App extends React.Component {
       <div>
         <label htmlFor="termMonth">Term (Month):</label>
         <div className="formField">
-		  <button type="button" className="term-month--button" value="12" onClick={this.handleInputChangeTerm} name="termMonth">12</button>
-		  <button type="button" className={this.state.isDefaultMonth? "term-month--button active" : "term-month--button"} value="24" onClick={this.handleInputChangeTerm} name="termMonth">24</button>
-		  <button type="button" className="term-month--button" value="36" onClick={this.handleInputChangeTerm} name="termMonth">36</button>
-		  <button type="button" className="term-month--button" value="48" onClick={this.handleInputChangeTerm} name="termMonth">48</button>
-		  <button type="button" className="term-month--button" value="72" onClick={this.handleInputChangeTerm} name="termMonth">72</button>
-		  <button type="button" className="term-month--button" value="84" onClick={this.handleInputChangeTerm} name="termMonth">84</button>
-			  {/* <span>{formErrors.termMonth}</span>*/}
-        </div>
+			{buttonMonthLoan}
+		</div>
       </div>
       <div>
         <label htmlFor="downPayment">Down Payment:</label>
@@ -220,12 +183,11 @@ class App extends React.Component {
           <input
             type="text"
             defaultValue={this.state.downPayment}
-            onChange={this.handleInputChangeLoanPay}
+            onChange={this.handleInputChange}
             id="downPayment"
             name="downPayment"
           /> 
 		  $
-          {/*<span>{formErrors.downPayment}</span>*/}
         </div>
       </div>
       <div>
@@ -234,25 +196,17 @@ class App extends React.Component {
           <input
             type="text"
             defaultValue={this.state.tradeIn}
-            onChange={this.handleInputChangeTradeLoan}
+            onChange={this.handleInputChange}
             id="tradeIn"
             name="tradeIn"
           /> $
-          {/*<span>{formErrors.tradeIn}</span>*/}
         </div>
       </div>
       <div>
         <label htmlFor="creditScoreLoan">Approx. Credit Score:</label>
         <div className="formField">
-		  <button type="button" className="credit-score--button" value='600' onClick={this.handleInputChangeCreditLoan}>600</button>
-		  <button type="button" className="credit-score--button" value='650' onClick={this.handleInputChangeCreditLoan}>650</button>
-		  <button type="button" className="credit-score--button" value='700'  onClick={this.handleInputChangeCreditLoan}>700</button>
-		  <button type="button" value='750' onChange={this.handleInputChangeCreditLoan} className={this.state.isDefaultScore? "credit-score--button active" : "term-month--button"}>750</button>
-		  <button type="button" className="credit-score--button" value='800' onClick={this.handleInputChangeCreditLoan}>800</button>
-		  <button type="button" className="credit-score--button" value='850' onClick={this.handleInputChangeCreditLoan}>850</button>
-		  <button type="button" className="credit-score--button" value='900' onClick={this.handleInputChangeCreditLoan}>900</button>
-          {/*<span>{formErrors.creditScore}</span>*/}
-        </div>
+			{buttonCreditScore}
+		</div>
       </div>
 	   <div>
         <label htmlFor="APR">Estimated APR:</label>
@@ -260,11 +214,10 @@ class App extends React.Component {
           <input
             type="text"
             defaultValue={this.state.APR}
-            onChange={this.handleInputChangeAPR}
+            onChange={this.handleInputChange}
             id="APR"
             name="APR"
           /> %
-         {/* <span>{formErrors.APR}</span>*/}
         </div>
       </div>
       <div>
@@ -273,11 +226,10 @@ class App extends React.Component {
           <input
             type="text"
             value = {this.state.postCode}
-            onChange={this.handleInputChangePostCode}
+            onChange={this.handleInputChange}
             id="postCode"
             name="postCode"
           />
-          {/*<span>{formErrors.postCode}</span>*/}
         </div>
       </div>
     </form>
@@ -288,10 +240,8 @@ class App extends React.Component {
       <div>
         <label htmlFor="termMonth">Term (Month):</label>
         <div className="formField">
-		  <select className="term-month--select" onChange={this.handleInputChangeTermMonth} defaultValue={this.state.termMonth}>
-			<option value="24">24</option>
-			<option value="36">36</option>
-			<option value="48">48</option>
+		  <select className="term-month--select" onChange={this.handleInputChangeLease} defaultValue={this.state.termMonth}>
+			  {selectTermMonth}
 		  </select>
 
         </div>
@@ -302,7 +252,7 @@ class App extends React.Component {
           <input
             type="text"
             defaultValue={this.state.downPaymentLease}
-            onChange={this.handleInputChangePayment}
+            onChange={this.handleInputChangeLease}
             id="downPaymentLease"
             name="downPaymentLease"
           /> 
@@ -316,7 +266,7 @@ class App extends React.Component {
           <input
             type="text"
             defaultValue={this.state.tradeInLease}
-            onChange={this.handleInputChangeTrade}
+            onChange={this.handleInputChangeLease}
             id="tradeInLease"
             name="tradeInLease"
           /> $
@@ -326,14 +276,8 @@ class App extends React.Component {
       <div>
         <label htmlFor="creditScore">Approx. Credit Score:</label>
         <div className="formField">
-			<select className="credit-score--select" onChange={this.handleInputChangeCredit} defaultValue={this.state.creditScore}>
-				<option value='600'>600</option>
-				<option value='650'>650</option>
-				<option value='700'>700</option>
-				<option value='750'>750</option>
-				<option value='800'>800</option>
-				<option value='850'>850</option>
-				<option value='900'>900</option>
+			<select className="credit-score--select" onChange={this.handleInputChangeLease} defaultValue={this.state.creditScore}>
+				{selectCreditScore}
 			</select>
 
         </div>
@@ -341,12 +285,9 @@ class App extends React.Component {
 	   <div>
         <label htmlFor="annualMiles">Annual Miles:</label>
         <div className="formField">
-         <select className="credit-score--select" onChange={this.handleInputChangeMiles} defaultValue={this.state.annualMiles}>
-				<option value='10000'>10000</option>
-				<option value='12000'>12000</option>
-				<option value='15000'>15000</option>
-			</select>
-
+         <select className="credit-score--select" onChange={this.handleInputChangeLease} defaultValue={this.state.annualMiles}>
+			 {selectAnnualMiles}
+		</select>
         </div>
       </div>
       <div>
@@ -355,7 +296,7 @@ class App extends React.Component {
           <input
             type="text"
             value={this.state.postCode}
-            onChange={this.handleInputChangeCode}
+            onChange={this.handleInputChangeLease}
             id="postCodeLease"
             name="postCodeLease"
           />
