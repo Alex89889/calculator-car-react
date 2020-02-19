@@ -5,7 +5,6 @@ import { Global } from "@emotion/core";
 import styles, { globalStyles } from "./App.styles";
 import InfoCard from "./components/InfoCard";
 
-import { calculateLoan, calculateAmortization } from "./utils/loanCalculator";
 
 class App extends React.Component {
 	_isMounted = false;
@@ -22,6 +21,7 @@ class App extends React.Component {
 		postCodeLease: 0,
 		creditScore:750,
 		creditScoreLoan:750,
+		creditScoreValue: 1,
 		postCode: 0,
 		termMonthLoan:24,
 		downPayment: 0,
@@ -89,41 +89,33 @@ class App extends React.Component {
  
   
   changePaymentLease(){
-	  let creditScoreValue;
-	  if(this.state.creditScore >= 750){
-		creditScoreValue = 0.95;
-	  }
-	  else if(this.state.creditScore >= 700 && this.state.creditScore < 750){
-		creditScoreValue = 1;  
-	  }
-	  else if(this.state.creditScore >= 640 && this.state.creditScore < 700){
-		creditScoreValue = 1.05;  
-	  }
-	  else if(this.state.creditScore < 640){
-		creditScoreValue = 1.20;    
-	  }
-	  let newMonPayment = Math.round((42815 - this.state.tradeInLease - this.state.downPaymentLease) * this.state.annualMiles / 10000 / this.state.termMonth * creditScoreValue);
+	  this.checkCreditScoreValue(this.state.creditScore);
+	  let newMonPayment = Math.round((42815 - this.state.tradeInLease - this.state.downPaymentLease) * this.state.annualMiles / 10000 / this.state.termMonth * this.state.creditScoreValue);
 	  this.setState({monthlyPaymentLease: newMonPayment});  
   }
   
   changePaymentLoan(){
-	  let creditScoreValue;
+	  this.checkCreditScoreValue(this.state.creditScoreLoan);
 	  let APR = this.state.APR || 1;
-	  
-	  if(this.state.creditScoreLoan >= 750){
+	  let newMonPayment = Math.round((42815 - this.state.tradeIn - this.state.downPayment) / this.state.termMonthLoan * this.state.creditScoreValue * APR);
+	  this.setState({monthlyPaymentLoan: newMonPayment});  
+  }
+  
+  checkCreditScoreValue(creditScore){
+	 let creditScoreValue;
+	 if(creditScore >= 750){
 		creditScoreValue = 0.95;
 	  }
-	  else if(this.state.creditScoreLoan >= 700 && this.state.creditScoreLoan < 750){
+	  else if(creditScore >= 700 && creditScore < 750){
 		creditScoreValue = 1;  
 	  }
-	  else if(this.state.creditScoreLoan >= 640 && this.state.creditScoreLoan < 700){
+	  else if(creditScore >= 640 && creditScore < 700){
 		creditScoreValue = 1.05;  
 	  }
-	  else if(this.state.creditScoreLoan < 640){
+	  else if(creditScore < 640){
 		creditScoreValue = 1.20;    
-	  }
-	  let newMonPayment = Math.round((42815 - this.state.tradeIn - this.state.downPayment) / this.state.termMonthLoan * creditScoreValue * APR);
-	  this.setState({monthlyPaymentLoan: newMonPayment});  
+	  } 
+	  this.setState({creditScoreValue: creditScoreValue}); 
   }
   
 	
@@ -135,7 +127,7 @@ class App extends React.Component {
 		: <button key={number.toString()} type="button" className="term-month--button" value={number} onClick={this.handleInputChange} name="termMonthLoan">{number}</button>);  
     
 	const creditScoreValue = [600, 650, 700, 750, 800, 850, 900];
-	const buttonCreditScore = termMonthValue.map((number) =>
+	const buttonCreditScore = creditScoreValue.map((number) =>
 		(number === 750) ?
 		<button key={number.toString()} type="button" value={number} onChange={this.handleInputChange} name="creditScoreLoan" className={this.state.isDefaultScore? "credit-score--button active" : "term-month--button"}>{number}</button>
 		: <button key={number.toString()} type="button" className="credit-score--button" value={number} onClick={this.handleInputChange} name="creditScoreLoan">{number}</button>	);
@@ -187,7 +179,7 @@ class App extends React.Component {
             id="downPayment"
             name="downPayment"
           /> 
-		  $
+		  <span className="dollar">$</span>
         </div>
       </div>
       <div>
@@ -199,7 +191,7 @@ class App extends React.Component {
             onChange={this.handleInputChange}
             id="tradeIn"
             name="tradeIn"
-          /> $
+          /> <span className="dollar">$</span>
         </div>
       </div>
       <div>
@@ -217,7 +209,7 @@ class App extends React.Component {
             onChange={this.handleInputChange}
             id="APR"
             name="APR"
-          /> %
+          /> <span className="dollar">%</span>
         </div>
       </div>
       <div>
@@ -229,6 +221,7 @@ class App extends React.Component {
             onChange={this.handleInputChange}
             id="postCode"
             name="postCode"
+			className="post-code--input"
           />
         </div>
       </div>
@@ -256,7 +249,7 @@ class App extends React.Component {
             id="downPaymentLease"
             name="downPaymentLease"
           /> 
-		  $
+		  <span className="dollar">$</span>
    
         </div>
       </div>
@@ -269,7 +262,7 @@ class App extends React.Component {
             onChange={this.handleInputChangeLease}
             id="tradeInLease"
             name="tradeInLease"
-          /> $
+          /> <span className="dollar">$</span>
   
         </div>
       </div>
@@ -298,7 +291,8 @@ class App extends React.Component {
             value={this.state.postCode}
             onChange={this.handleInputChangeLease}
             id="postCodeLease"
-            name="postCodeLease"
+			className="post-code--input"
+            name="postCode"
           />
         </div>
       </div>

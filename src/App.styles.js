@@ -49,12 +49,8 @@ export default css`
 	margin: 0 0 5px;
 	line-height: 1.5;
 	color: #383838;
-	/* прикрутим анимацию */
-	-webkit-animation-duration: 1s;
 	animation-duration: 1s;
-	-webkit-animation-fill-mode: both;
 	animation-fill-mode: both;
-	-webkit-animation-name: fadeIn;
 	animation-name: fadeIn;
 }
 /* Описываем анимацию свойства opacity */
@@ -75,12 +71,12 @@ export default css`
 		opacity: 1;
 	}
 }
-/* Прячем чекбоксы */
+
 .tabs>input {
 	display: none;
 	position: absolute;
 }
-/* Стили переключателей вкладок (табов) */
+
 .tabs>label {
 	display: inline-block;
 	margin: 0 0 -1px;
@@ -94,31 +90,23 @@ export default css`
 	border-radius: 3px 3px 0 0;
 }
 
-/* Изменения стиля переключателей вкладок при наведении */
- 
+
 .tabs>label:hover {
 	color: #888;
 	cursor: pointer;
 }
-/* Стили для активной вкладки */
+
 .tabs>input:checked+label {
 	color: #555;
 	border-top: 1px solid #009933;
 	border-bottom: 1px solid #fff;
 	background: #fff;
 }
-/* Активация секций с помощью псевдокласса :checked */
+
 #tab1:checked~#content-tab1, #tab2:checked~#content-tab2, #tab3:checked~#content-tab3, #tab4:checked~#content-tab4 {
 	display: block;
 }
-/* Убираем текст с переключателей 
-* и оставляем иконки на малых экранах
-*/
- 
 
-/* Изменяем внутренние отступы 
-*  переключателей для малых экранов
-*/
 @media screen and (max-width: 400px) {
 	.tabs>label {
 		padding: 15px;
@@ -137,13 +125,11 @@ export default css`
       display: flex;
       width: 100%;
       input {
-        width: 80%;
+        width: 84%;
       }
-      span {
-        font-size: 1.5rem;
-        color: red;
-        margin-top: 0.5rem;
-      }
+	  select{
+		width: 97%;
+	  }
     }
     @media only screen and (max-width: 450px) {
       flex-direction: column;
@@ -152,16 +138,14 @@ export default css`
       }
     }
   }
-  & > div:first-of-type{
-    margin-top: 0;
-  }
-  .error {
-    border: 0.3rem solid red;
-  }
   input {
     font-size: 1.8rem;
     border: 0.3rem solid ${COLORS.PRIMARY_1};
     padding: 1rem;
+  }
+  
+  .post-code--input{
+	width: 100%;
   }
  
   .term-month--select{
@@ -207,51 +191,6 @@ export default css`
     }
   }
 
-  button:focus,
-  input:focus {
-    outline: ${COLORS.SECONDARY_2} solid 0.3rem;
-    outline-offset: -0.3rem;
-  }
-  
-  & > div {
-    display: flex;
-    justify-content: space-between;
-    margin: 3rem 0;
-    label{
-      width: 30%;
-    }
-    .formField {
-      position: relative;
-      flex-wrap: wrap;
-      display: flex;
-      width: 100%;
-      input {
-        width: 80%;
-      }
-      span {
-        font-size: 1.5rem;
-        color: red;
-        margin-top: 0.5rem;
-      }
-    }
-    @media only screen and (max-width: 450px) {
-      flex-direction: column;
-      .formField, label{ 
-        width: 100%;
-      }
-    }
-  }
-  & > div:first-of-type{
-    margin-top: 0;
-  }
-  .error {
-    border: 0.3rem solid red;
-  }
-  input {
-    font-size: 1.8rem;
-    border: 0.3rem solid ${COLORS.PRIMARY_1};
-    padding: 1rem;
-  }
  
   .term-month--button{
 	width: 16%;
@@ -294,6 +233,15 @@ export default css`
       background-color: ${COLORS.SECONDARY_1};
       cursor: pointer;
     }
+  }
+  
+  .dollar{
+	color: black;
+	border-right: 0.3rem solid ${COLORS.PRIMARY_1};
+	border-top: 0.3rem solid ${COLORS.PRIMARY_1};
+	border-bottom: 0.3rem solid ${COLORS.PRIMARY_1};
+	padding: 1rem;
+	margin: 0;
   }
 
   button:focus,
