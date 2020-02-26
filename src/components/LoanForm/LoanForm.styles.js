@@ -1,10 +1,8 @@
 import { css } from "@emotion/core";
-import { COLORS } from "./constants";
+import { COLORS } from "../../constants";
 
 export default css`
-  max-width: 800px;
-  margin: 0 auto;
-  font-size: 2rem;
+	  font-size: 2rem;
   padding: 0 5rem;
   .container{
 	display: flex;
@@ -103,28 +101,6 @@ export default css`
 	display: block;
 }
 
-
- & > div {
-    display: flex;
-    justify-content: space-between;
-    margin: 3rem 0;
-    label{
-      width: 30%;
-    }
-    .formField {
-      position: relative;
-      flex-wrap: wrap;
-      display: flex;
-      width: 100%;
-	  padding: 20px 0;
-      input {
-        width: 84%;
-      }
-	  select{
-		width: 97%;
-	  }
-    }
-  }
   input {
     font-size: 1.8rem;
     border: 0.3rem solid ${COLORS.PRIMARY_1};
@@ -222,31 +198,38 @@ export default css`
     }
   }
   
-  .dollar{
-	color: ${COLORS.PRIMARY_2};
-	border-right: 0.3rem solid ${COLORS.PRIMARY_1};
-	border-top: 0.3rem solid ${COLORS.PRIMARY_1};
-	border-bottom: 0.3rem solid ${COLORS.PRIMARY_1};
-	padding: 1rem;
-	margin: 0;
-  }
-
-  button:focus,
-  input:focus {
-    outline: ${COLORS.SECONDARY_2} solid 0.3rem;
-    outline-offset: -0.3rem;
-  }
-  
-  @media screen and (max-width: 400px) {
-	.tabs>label {
-		padding: 15px;
-	}
+  .btn-bar {
+  margin: 0 0 30px 0;
 }
-`;
 
-export const globalStyles = css`
-  html {
-    font-size: 62.5%;
-    font-family: "Times New Roman", Georgia, Serif;
+.btn-bar__label {
+  margin: 0 0 10px 0;
+}
+
+.btn-bar__list {
+  display: flex;
+}
+
+.btn-bar__button {
+  width: 14%;
+  flex-grow: 1;
+  padding: 10px 0;
+
+  font-size: 20px;
+  color: gray;
+
+  border: 1px solid gray;
+  background-color: #ffffff;
+  cursor: pointer;
+
+  &:not(:last-child) {
+    border-right: 0;
   }
+
+  &--active {
+    color: #ffffff;
+
+    background-color: #007DE1;
+  }
+}
 `;
