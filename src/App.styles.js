@@ -1,8 +1,11 @@
 import { css } from "@emotion/core";
+import { COLORS } from "./constants";
 
 export default css`
+  max-width: 800px;
+  margin: 0 auto;
   font-size: 2rem;
-  padding: 0 20rem;
+  padding: 0 5rem;
   .container{
 	display: flex;
     justify-content: space-between; 
@@ -23,15 +26,6 @@ export default css`
     .loanForm {
       width: 100%;
     }
-    @media (max-width: 689px) {
-      flex-direction: column;
-      .loanForm{
-        width: 100%;
-      }
-    }
-  }
-  @media (max-width: 1041px) {
-    padding: 0;
   }
 
   header h1 {
@@ -51,12 +45,8 @@ export default css`
 	margin: 0 0 5px;
 	line-height: 1.5;
 	color: #383838;
-	/* прикрутим анимацию */
-	-webkit-animation-duration: 1s;
 	animation-duration: 1s;
-	-webkit-animation-fill-mode: both;
 	animation-fill-mode: both;
-	-webkit-animation-name: fadeIn;
 	animation-name: fadeIn;
 }
 /* Описываем анимацию свойства opacity */
@@ -77,12 +67,12 @@ export default css`
 		opacity: 1;
 	}
 }
-/* Прячем чекбоксы */
+
 .tabs>input {
 	display: none;
 	position: absolute;
 }
-/* Стили переключателей вкладок (табов) */
+
 .tabs>label {
 	display: inline-block;
 	margin: 0 0 -1px;
@@ -96,32 +86,158 @@ export default css`
 	border-radius: 3px 3px 0 0;
 }
 
-/* Изменения стиля переключателей вкладок при наведении */
- 
+
 .tabs>label:hover {
 	color: #888;
 	cursor: pointer;
 }
-/* Стили для активной вкладки */
+
 .tabs>input:checked+label {
 	color: #555;
 	border-top: 1px solid #009933;
 	border-bottom: 1px solid #fff;
 	background: #fff;
 }
-/* Активация секций с помощью псевдокласса :checked */
+
 #tab1:checked~#content-tab1, #tab2:checked~#content-tab2, #tab3:checked~#content-tab3, #tab4:checked~#content-tab4 {
 	display: block;
 }
-/* Убираем текст с переключателей 
-* и оставляем иконки на малых экранах
-*/
- 
 
-/* Изменяем внутренние отступы 
-*  переключателей для малых экранов
-*/
-@media screen and (max-width: 400px) {
+
+ & > div {
+    display: flex;
+    justify-content: space-between;
+    margin: 3rem 0;
+    label{
+      width: 30%;
+    }
+    .formField {
+      position: relative;
+      flex-wrap: wrap;
+      display: flex;
+      width: 100%;
+	  padding: 20px 0;
+      input {
+        width: 84%;
+      }
+	  select{
+		width: 97%;
+	  }
+    }
+  }
+  input {
+    font-size: 1.8rem;
+    border: 0.3rem solid ${COLORS.PRIMARY_1};
+    padding: 1rem;
+  }
+  
+  .post-code--input{
+	width: 100%;
+  }
+ 
+  .term-month--select{
+	width: 100%;
+    color: ${COLORS.PRIMARY_2};
+    background-color: ${COLORS.SECONDARY_2};
+    border: none;
+    font-size: 2rem;
+	border: 1px solid ${COLORS.PRIMARY_1};
+    &:hover {
+      background-color: ${COLORS.SECONDARY_1};
+      cursor: pointer;
+    }  
+  }
+  .term-month--select.active{
+		background-color: ${COLORS.SECONDARY_1};
+	}
+   .credit-score--select{
+	width: 100%;
+    color: ${COLORS.PRIMARY_2};
+    background-color: ${COLORS.SECONDARY_2};
+    border: none;
+    font-size: 2rem;
+	border: 1px solid ${COLORS.PRIMARY_1};
+    &:hover {
+      background-color: ${COLORS.SECONDARY_1};
+      cursor: pointer;
+    }  
+  }
+  .credit-score--select.active{
+		background-color: ${COLORS.SECONDARY_1};
+	}
+  .calculate-button {
+    width: 100%;
+    color: ${COLORS.SECONDARY_2};
+    background-color: ${COLORS.PRIMARY_1};
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 2rem;
+    &:hover {
+      background-color: ${COLORS.SECONDARY_1};
+      cursor: pointer;
+    }
+  }
+
+ 
+  .term-month--button{
+	width: 16%;
+    color: ${COLORS.PRIMARY_2};
+    background-color: ${COLORS.SECONDARY_2};
+    border: none;
+    font-size: 2rem;
+	border: 1px solid ${COLORS.PRIMARY_1};
+    &:hover {
+      background-color: ${COLORS.SECONDARY_1};
+      cursor: pointer;
+    }  
+  }
+  .term-month--button.active{
+	  border: 2px solid ${COLORS.SECONDARY_1}
+	}
+   .credit-score--button{
+	width: 14%;
+    color: ${COLORS.PRIMARY_2};
+    background-color: ${COLORS.SECONDARY_2};
+    border: none;
+    font-size: 2rem;
+	border: 1px solid ${COLORS.PRIMARY_1};
+    &:hover {
+      background-color: ${COLORS.SECONDARY_1};
+      cursor: pointer;
+    }  
+  }
+  .credit-score--button.active{
+		border: 2px solid ${COLORS.SECONDARY_1}
+	}
+  .calculate-button {
+    width: 100%;
+    color: ${COLORS.SECONDARY_2};
+    background-color: ${COLORS.PRIMARY_1};
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 2rem;
+    &:hover {
+      background-color: ${COLORS.SECONDARY_1};
+      cursor: pointer;
+    }
+  }
+  
+  .dollar{
+	color: ${COLORS.PRIMARY_2};
+	border-right: 0.3rem solid ${COLORS.PRIMARY_1};
+	border-top: 0.3rem solid ${COLORS.PRIMARY_1};
+	border-bottom: 0.3rem solid ${COLORS.PRIMARY_1};
+	padding: 1rem;
+	margin: 0;
+  }
+
+  button:focus,
+  input:focus {
+    outline: ${COLORS.SECONDARY_2} solid 0.3rem;
+    outline-offset: -0.3rem;
+  }
+  
+  @media screen and (max-width: 400px) {
 	.tabs>label {
 		padding: 15px;
 	}

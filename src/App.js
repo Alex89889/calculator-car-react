@@ -3,30 +3,40 @@ import "regenerator-runtime/runtime";
 import { hot } from "react-hot-loader/root";
 import { Global } from "@emotion/core";
 import styles, { globalStyles } from "./App.styles";
-import LoanForm from "./components/LoanForm";
-import LeaseForm from "./components/LeaseForm";
+import getCreditScoreValue from './utils/utils';
 import InfoCard from "./components/InfoCard";
+import LeaseForm from "./components/LeaseForm";
+import LoanForm from "./components/LoanForm";
 
-import { calculateLoan, calculateAmortization } from "./utils/loanCalculator";
 
 class App extends React.Component {
 	_isMounted = false;
 	
   constructor(props) {
     super(props);
-    this.state = { /*termMonth:36,
-    downPaymentLease: 0,
-    tradeInLease: 0,
-    annualMiles:12000,*/
-    postCode: 0
-	/*creditScore:750*/
+    this.state = { 
+		monthlyPaymentLease:2034,
+		monthlyPaymentLoan:1695,
+		termMonth:36,
+		downPaymentLease: 0,
+		tradeInLease: 0,
+		annualMiles:12000,
+		postCodeLease: 0,
+		creditScore:750,
+		creditScoreLoan:750,
+		postCode: 0,
+		termMonthLoan:24,
+		downPayment: 0,
+		tradeIn: 0,
+		APR:0,
+		postCodeLoan:0,
+		isDefaultMonth: true,
+		isDefaultScore: true
 	};
+	
+	this.isValid = {};
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
-  
   
   componentDidMount() {
 	this._isMounted = true;  
@@ -37,7 +47,7 @@ class App extends React.Component {
         (result) => {
 			if (this._isMounted) {
 				this.setState({postCode: result.postal});
-				
+				this.setState({postCodeLoan: result.postal});
 			}
         },
         (error) => {
@@ -52,21 +62,62 @@ class App extends React.Component {
   componentWillUnmount() {
     this._isMounted = false;
   }
+  
+  componentDidUpdate(prevProps, prevState) {
+	const {
+      downPayment, tradeIn, isDefaultScore, APR, isDefaultMonth, postCode, monthlyPaymentLoan, termMonthLoan, creditScoreLoan, 
+	  downPaymentLease, tradeInLease, termMonth, creditScore, annualMiles, postCodeLease
+    } = this.state;
 
-  handleChange(event) {
-  //  this.setState({value: event.target.value});
-  }
+    const {
+      downPayment: newDownPayment, tradeIn: newTradeIn, isDefaultScore: newIsDefaultScore,creditScoreLoan: newCreditScoreLoan,
+      postCode: newPostCode, APR: newAPR, isDefaultMonth: newIsDefaultMonth, monthlyPaymentLoan: newMonthlyPaymentLoan,termMonthLoan: newTermMonthLoan,
+	  downPaymentLease: newDownPaymentLease, tradeInLease: newTradeInLease, termMonth: newTermMonth, creditScore: newCreditScore,
+	  annualMiles: newAnnualMiles, postCodeLease: newPostCodeLease
+    } = prevState;
 
-  handleSubmit(event) {
-   // alert('Отправленное имя: ' + this.state.value);
-   // event.preventDefault();
-  }
-  handleInputChange(event) {
-	  
-  }
+    const isValid = Object.keys(this.isValid).every((key) => this.isValid[key] === true);
 
+    const isChangePaymentLoan = downPayment !== newDownPayment || tradeIn !== newTradeIn || creditScoreLoan !== newCreditScoreLoan
+    || isDefaultScore !== newIsDefaultScore || postCode !== newPostCode || APR !== newAPR
+    || isDefaultMonth !== newIsDefaultMonth || monthlyPaymentLoan !== newMonthlyPaymentLoan || termMonthLoan !== newTermMonthLoan;
+	
+    const isChangePaymentLease = downPaymentLease !== newDownPaymentLease || tradeInLease !== newTradeInLease
+    || termMonth !== newTermMonth || creditScore !== newCreditScore || annualMiles !== newAnnualMiles
+    || postCodeLease !== newPostCodeLease; 
+	 
+    if (isChangePaymentLoan && isValid) {
+      this.changePaymentLoan();
+    }
+	if (isChangePaymentLease && isValid) {
+      this.changePaymentLease();
+    }
+  }
+  
+  changePaymentLease(){ 
+	  let newMonPayment = Math.round((42815 - this.state.tradeInLease - this.state.downPaymentLease) * this.state.annualMiles / 10000 / this.state.termMonth * getCreditScoreValue(this.state.creditScore));
+	  this.setState({monthlyPaymentLease: newMonPayment});  
+  }
+  
+  changePaymentLoan(){
+	  let APR = this.state.APR || 1;
+	  let newMonPayment = Math.round((42815 - this.state.tradeIn - this.state.downPayment) / this.state.termMonthLoan * getCreditScoreValue(this.state.creditScoreLoan) * APR);
+	  this.setState({monthlyPaymentLoan: newMonPayment});  
+  }
+  
+  changeProp=(prop)=> {
+    this.setState({ ...prop });
+  }
+  
+	
   render() {
-    return (
+	  
+	const {
+      downPayment, tradeIn, isDefaultScore, APR, isDefaultMonth, postCode, monthlyPaymentLoan, validation,termMonthLoan,downPaymentLease,tradeInLease,termMonth,
+	  creditScore,postCodeLease,annualMiles, monthlyPaymentLease, creditScoreLoan
+    } = this.state;	
+	
+	return (
 	<div css={styles}>
       <Global styles={globalStyles} />
       <header>
@@ -79,28 +130,37 @@ class App extends React.Component {
  
 		<input id="tab2" type="radio" name="tabs"/>
 		<label htmlFor="tab2" title="Lease">Lease</label>
-      
-        <section className="calculatorWrapper" id="content-tab1">
-          <LoanForm
-            className='loanForm'
-            initialValues={this.loanInitialValues}
-            onSubmit={this.handleSubmit}
-          />
-        </section>
-		
-		<section className="calculatorWrapper" id="content-tab2">
-          <LeaseForm
-            className='leaseForm'
-            initialValues={this.loanInitialValues}
-            onSubmit={this.handleSubmit}
-          />
-        </section>
+        <LoanForm 
+			downPayment={downPayment}
+			tradeIn={tradeIn}
+			isDefaultScore={isDefaultScore}
+			APR={APR}
+			isDefaultMonth = {isDefaultMonth}
+			postCode={postCode}	
+			msrp={monthlyPaymentLoan}
+			onChangeProp={this.changeProp}
+			termMonthLoan={termMonthLoan}
+			creditScoreLoan={creditScoreLoan}
+		/>
+		<LeaseForm 
+			downPaymentLease={downPaymentLease}
+			tradeInLease={tradeInLease}
+			termMonth={termMonth}
+			creditScore={creditScore}
+			annualMiles = {annualMiles}
+			postCodeLease={postCodeLease}
+			msrp={monthlyPaymentLease}
+			onChangeProp={this.changeProp}
+		/>
       </div>
 	  <section className="infoCard">
 		<InfoCard
             className='InfoCard'
             postCode = {this.state.postCode}
+			monthlyPaymentLease = {this.state.monthlyPaymentLease}
+			monthlyPaymentLoan = {this.state.monthlyPaymentLoan}
             onSubmit={this.handleSubmit}
+			
           />
 	  </section>
 	 </div>
